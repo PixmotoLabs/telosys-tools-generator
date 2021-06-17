@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 import org.telosys.tools.commons.StrUtil;
 import org.telosys.tools.commons.XmlUtil;
@@ -185,6 +186,68 @@ public class FnInContext {
 		return sb.toString();
 	}
 
+	//-------------------------------------------------------------------------------------
+	@VelocityMethod(
+		text={	
+			"Returns a list which is a copy of fieldsList with the attribures with database names attributeNames removed"
+			},
+		example={ 
+				"$fn.removeFromList( $entity.attributes, \"added\", \"updated\" )",
+				"Returns : new list without arrtributes added or updated "},
+		parameters = { "fields : list of fields to be added in the arguments list" },
+		since = "3.0.1"
+			)
+	public List<AttributeInContext> removeFromList( List<AttributeInContext> fieldsList, String ... attrNames ) {
+		List<AttributeInContext> ret = new ArrayList<>();
+		if ( fieldsList != null ) {
+			for ( AttributeInContext field : fieldsList ) {
+				boolean add = true;
+				for(String name : attrNames) {
+					if(Objects.equals(name, field.getName())) {
+						add = false;
+						break;
+					}
+				}
+				if(add) {
+					ret.add(field);
+				}
+			}
+		} 
+		return ret;
+	}
+	
+	//-------------------------------------------------------------------------------------
+	@VelocityMethod(
+		text={	
+			"Returns a list which is a copy of fieldsList with the attributes with names equal to those in exclustionList removed"
+			},
+		example={ 
+				"$fn.removeFromList( $entity.attributes, $entity.attrsToRemove )",
+				"Returns : new list without arrtributes attrsToRemove "},
+		parameters = { "fields : list of fields to be added in the arguments list" },
+		since = "3.0.1"
+			)
+	public List<AttributeInContext> removeFromList( List<AttributeInContext> fieldsList, List<AttributeInContext> exclustionList ) {
+		List<AttributeInContext> ret = new ArrayList<>();
+		if ( fieldsList != null ) {
+			for ( AttributeInContext field : fieldsList ) {
+				boolean add = true;
+				for(AttributeInContext exfield : exclustionList) {
+					if(Objects.equals(exfield.getName(), field.getName())) {
+						add = false;
+						break;
+					}
+				}
+				if(add) {
+					ret.add(field);
+				}
+			}
+		} 
+		return ret;
+	}
+	
+	
+	
 	//-------------------------------------------------------------------------------------
 	@VelocityMethod(
 		text={	
@@ -448,6 +511,25 @@ public class FnInContext {
 		return "";
 	}
 
+    
+	//-------------------------------------------------------------------------------------
+	@VelocityMethod(
+		text={	
+			"Convert a string to UPPER_SNAKE_CASE"
+			},
+		example={ 
+			"$java.toUpperSnakeCase( $entity.name )" },
+		parameters = { 
+			"s : the String to be converted."},
+		since = "3.0.0"
+			)
+	public String toUpperSnakeCase( String s ) {
+		if(s != null) {
+			return Util.toUpperSnake(s);
+		}
+		return "";
+	}
+	
 	//==============================================================================================
 	// Version 2.1.0
 	//==============================================================================================

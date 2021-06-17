@@ -93,6 +93,8 @@ public class AttributeInContext
 	
 	private final String  _sDefaultValue ; // can be null 
 	private final boolean _bSelected ; // v 2.1.1 #LGU
+	private final boolean _bInsertable ;
+	private final boolean _bUpdatable ;
 	
 	//--- Database info -------------------------------------------------
     private final boolean _bKeyElement      ;  // True if primary key
@@ -118,6 +120,7 @@ public class AttributeInContext
     private final boolean _bNotNull   ;
     private final String  _sLabel     ; // v 2.0.3
     private final String  _sInputType ; // v 2.0.3
+    
 
     //--- Further info for BOOLEAN -----------------------------------
     private final String  _sBooleanTrueValue  ; // eg "1", ""Yes"", ""true""
@@ -193,6 +196,8 @@ public class AttributeInContext
 				
 		//_bSelected        = column.getSelected(); // v 2.1.1 #LGU
 		_bSelected        = attribute.isSelected(); // v 3.0.0
+		_bInsertable      = attribute.isInsertable();
+		_bUpdatable       = attribute.isUpdatable();
 		
 		//_sInitialValue    = null ; //  column.getJavaInitialValue()  ???
 		_sInitialValue    = StrUtil.notNull( attribute.getInitialValue() ); // v 3.0.0
@@ -1420,7 +1425,7 @@ public class AttributeInContext
 	)
     public boolean hasDefaultValue() // Velocity : $attrib.hasDefaultValue()
     {
-    	return ( _sDefaultValue != null ) ;
+    	return ! StrUtil.nullOrVoid(_sDefaultValue) ;
     }
 	//-------------------------------------------------------------------------------------
 	@VelocityMethod(
@@ -1451,6 +1456,26 @@ public class AttributeInContext
 	)
 	public boolean isSelected() {
 		return _bSelected;
+	}
+	
+	//-------------------------------------------------------------------------------------
+	@VelocityMethod(
+		text={	
+			"Returns TRUE if the attribute is insertable (ckeckbox ckecked in the GUI)"
+			}
+	)
+	public boolean isInsertable() {
+		return _bInsertable;
+	}
+		
+	//-------------------------------------------------------------------------------------
+	@VelocityMethod(
+		text={	
+			"Returns TRUE if the attribute is insertable (ckeckbox ckecked in the GUI)"
+			}
+	)
+	public boolean isUpdatable() {
+		return _bUpdatable;
 	}
 
 	//------------------------------------------------------------------------------------------

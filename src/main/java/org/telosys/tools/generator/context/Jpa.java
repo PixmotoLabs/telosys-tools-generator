@@ -112,6 +112,65 @@ public class Jpa {
 		*/
 		return jpaImports ;
 	}
+	
+	//-------------------------------------------------------------------------------------
+	// JPA IMPORTS
+	//-------------------------------------------------------------------------------------
+	@VelocityMethod ( 
+		text= { 
+			"Returns a list of all the Java classes required by the current entity for JPA",
+			"( this version always returns 'javax.persistence.*' )"
+		},
+		parameters = {
+			"entity : the entity "
+		},
+		example={	
+			"#foreach( $import in $jpa.metamodelImports($entity) )",
+			"import $import;",
+			"#end" 
+		},
+		since = "3.0.0"
+	)
+	@VelocityReturnType("List of 'String'")
+	//public List<String> imports(JavaBeanClass entity) 
+	public List<String> metamodelImports(EntityInContext entity) 
+	{
+		ImportsList _importsJpa = buildJpaMetamodelImportsList(entity) ;
+		if ( _importsJpa != null )
+		{
+			return _importsJpa.getList() ;
+		}
+		return VOID_STRINGS_LIST ;
+	}
+	
+	//private JavaBeanClassImports getImports(JavaBeanClass entity) {
+	private ImportsList buildJpaMetamodelImportsList(EntityInContext entity) {
+		ImportsList jpaImports = new ImportsList();
+
+		for(AttributeInContext attr : entity.getAttributes()) {
+			if(attr.isUsedInSelectedLinks() == false) {
+				if("java.util.Date".equals(attr.getFullType())) {
+					jpaImports.declareType("java.util.Date");
+				} else if("java.math.BigDecimal".equals(attr.getFullType())) {
+					jpaImports.declareType("java.math.BigDecimal");
+				}
+			}
+		}
+		
+		jpaImports.declareType("javax.persistence.metamodel.StaticMetamodel");
+		
+		if(entity.getAttributesByCriteria(Const.NOT_KEY, Const.NOT_IN_SELECTED_LINKS).size() > 0) {
+			jpaImports.declareType("javax.persistence.metamodel.SingularAttribute");
+		}
+
+		for(LinkInContext link : entity.getLinks()) {
+			if(link.isCardinalityManyToMany() || link.isCardinalityOneToMany()) {
+				jpaImports.declareType("javax.persistence.metamodel.ListAttribute");
+			}
+		}
+		return jpaImports ;
+	}
+	
 	//-------------------------------------------------------------------------------------
 	// ENTITY JPA ANNOTATIONS
 	//-------------------------------------------------------------------------------------

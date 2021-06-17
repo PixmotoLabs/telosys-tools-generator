@@ -96,6 +96,8 @@ public class AttributeInFakeModel implements Comparable<AttributeInFakeModel>, S
 	private boolean _bDateFuture = false ;
 	private boolean _bDateBefore = false ;
 	private boolean _bDateAfter  = false ;
+	private boolean _bInsertable = true;
+	private boolean _bUpdatable = true;
 	private String  _sDateBeforeValue = null ;
 	private String  _sDateAfterValue  = null ;
 	
@@ -698,6 +700,22 @@ public class AttributeInFakeModel implements Comparable<AttributeInFakeModel>, S
 	}
 	public void setDateAfterValue(String v) {
 		_sDateAfterValue = v;
+	}
+	
+	@Override
+	public boolean isInsertable() {
+		return _bInsertable;
+	}
+	public void setInsertable(boolean b) {
+		_bInsertable = b;
+	}
+	
+	@Override
+	public boolean isUpdatable() {
+		return _bUpdatable;
+	}
+	public void setUpdatable(boolean b) {
+		_bUpdatable = b;
 	}
 	//-----------------------------------------------------------------------------
 

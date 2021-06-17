@@ -98,9 +98,12 @@ public class AnnotationsForJPA
 						annotationTableGenerator(annotations);
 					}
 				}
-				else
+				else if( _attribute.isAutoIncremented() ) 
 				{
 					// AUTO is the default strategy ( see JPA doc ) => use it explicitly 
+					annotationGeneratedValue(annotations, "GenerationType.IDENTITY", null);
+				}
+				else {
 					annotationGeneratedValue(annotations, "GenerationType.AUTO", null);
 				}
 			}
@@ -247,7 +250,15 @@ public class AnnotationsForJPA
 		if ( jdbcType == Types.VARCHAR || jdbcType == Types.CHAR ) {
 			s = s + ", length=" + _attribute.getDatabaseSize() + "" ;
 		}
+
+		if ( _attribute.isInsertable() == false ) {
+			s = s + ", insertable=false";
+		}
 		
+		if ( _attribute.isUpdatable() == false ) {
+			s = s + ", updatable=false";
+		}
+
 		s = s + ")" ;
 		
 		//--- Other elements for "@Column" ( from JavaDoc / Java EE 6 )

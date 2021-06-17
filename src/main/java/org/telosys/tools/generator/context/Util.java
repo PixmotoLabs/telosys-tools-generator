@@ -149,4 +149,45 @@ public class Util {
     	}
     	return defaultValue ;
     }
+    
+    /**
+     * Convert a string to upper case. 
+     * @param s
+     * @return
+     */
+    public static String toUpperSnake(String s) {
+    	int UPPER = 1;
+    	int OTHER = 2;
+    	int WSPACE = 3;
+    	int UNKNOWN = 4;
+    	
+    	int state = UNKNOWN;
+    	
+    	StringBuffer ret = new StringBuffer();
+    	for(int n = 0; n < s.length(); n++) {
+    		char c = s.charAt(n);
+    		if(Character.isWhitespace(c)) {
+    			if(state != WSPACE && state != UNKNOWN) {
+    				ret.append("_");
+    			}
+    			state = WSPACE;
+    		} else if(Character.isUpperCase(c)) {
+    			if(state != WSPACE && state != UNKNOWN && state != UPPER) {
+    				ret.append("_");
+    			} 
+				ret.append(c);
+				state = UPPER;
+    		} else if(c == '_') {
+    			if(state != WSPACE && state != UPPER) {
+    				ret.append("_");
+    			}
+    			state = WSPACE;
+    		} else {
+    			ret.append(Character.toUpperCase(c));
+    			state = OTHER;
+    		}
+    	}
+    	
+    	return ret.toString();
+    }
 }

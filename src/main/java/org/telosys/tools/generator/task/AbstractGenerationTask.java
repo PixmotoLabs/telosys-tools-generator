@@ -403,6 +403,8 @@ public abstract class AbstractGenerationTask
 		String entityName = this.getCurrentEntityName();
 		String templateName = this.getCurrentTemplateName();	
 		Throwable generatorExceptionCause = generatorException.getCause() ;
+		
+		_logger.error("ERROR", generatorException);
 		if ( generatorExceptionCause != null ) {
 //			String templateName = this.getCurrentTemplateName() ;
 //			String entityName = this.getCurrentEntityName() ;
